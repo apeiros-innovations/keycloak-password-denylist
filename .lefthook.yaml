@@ -1,0 +1,40 @@
+---
+remotes:
+  - git_url: "https://github.com/apeiros-innovations/common"
+    ref: main
+    configs:
+      - "lefthook.common.yaml"
+pre-commit:
+  jobs:
+    - name: fix and format
+      group:
+        parallel: false
+        jobs:
+          - name: fix trailing whitespace
+            glob: "*.{yml,yaml,md,json,jsonc,toml,sh}"
+            exclude:
+              - "*.svg"
+              - "*.png"
+              - "*.lock"
+            script: trailing-whitespaces.sh
+            runner: bash
+            args: "{staged_files}"
+            stage_fixed: true
+            fail_text: |
+              Failed to trim trailing whitespace.
+            tags:
+              - format
+          - name: fix EOF newline
+            glob: "*.{yml,yaml,md,json,jsonc,toml,sh}"
+            exclude:
+              - "*.svg"
+              - "*.png"
+              - "*.lock"
+            script: eof-fixer.sh
+            runner: bash
+            args: "{staged_files}"
+            stage_fixed: true
+            fail_text: |
+              Failed to normalize EOF newline.
+            tags:
+              - format

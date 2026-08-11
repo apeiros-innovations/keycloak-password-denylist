@@ -1,0 +1,16 @@
+---
+apiVersion: vendir.k14s.io/v1alpha1
+kind: Config
+minimumRequiredVersion: 0.46.0
+directories:
+  - path: dist/rootfs
+    permissions: 0755
+    contents:
+      - path: .
+        permissions: 0755
+        githubRelease:
+          slug: danielmiessler/SecLists
+          tag: "2026.1"
+          disableAutoChecksumValidation: true
+          http:
+            url: https://raw.githubusercontent.com/danielmiessler/SecLists/{tag}/Passwords/Common-Credentials/xato-net-10-million-passwords-1000000.txt

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices", "group:allNonMajor"],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "description": "Keep SecLists source and package release versions aligned",
+      "matchManagers": ["vendir"],
+      "matchDatasources": ["github-releases"],
+      "matchPackageNames": ["danielmiessler/SecLists"],
+      "groupName": "SecLists",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "seclists",
+      "commitMessageAction": "update",
+      "commitMessageTopic": "SecLists to {{{newVersion}}}",
+      "commitBody": "Release-As: {{{newVersion}}}.1"
+    }
+  ]
+}
