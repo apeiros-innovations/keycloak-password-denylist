@@ -94,31 +94,16 @@ jobs:
           fi
 
           ARTIFACT_REPOSITORY="ghcr.io/${REPOSITORY,,}"
-          ARTIFACT_REFERENCE="${ARTIFACT_REPOSITORY}:${SOURCE_REF}"
-          ARTIFACT_EXISTS=false
-
-          if oras resolve "${ARTIFACT_REFERENCE}" >/dev/null 2>&1; then
-            if [[ "${GITHUB_RUN_ATTEMPT}" == "1" ]]; then
-              printf 'Refusing to overwrite existing artifact: %s\n' \
-                "${ARTIFACT_REFERENCE}" >&2
-              exit 1
-            fi
-
-            printf 'Artifact already exists; resuming workflow attempt %s\n' \
-              "${GITHUB_RUN_ATTEMPT}"
-            ARTIFACT_EXISTS=true
-          fi
 
           {
-            printf 'exists=%s\n' "${ARTIFACT_EXISTS}"
-            printf 'reference=%s\n' "${ARTIFACT_REFERENCE}"
+            printf 'reference=%s:%s\n' \
+              "${ARTIFACT_REPOSITORY}" "${SOURCE_REF}"
             printf 'repository=%s\n' "${ARTIFACT_REPOSITORY}"
             printf 'source-ref=%s\n' "${SOURCE_REF}"
             printf 'tag=%s\n' "${SOURCE_REF}"
           } >> "${GITHUB_OUTPUT}"
 
       - name: Push OCI image
-        if: ${{ steps.publication.outputs.exists != 'true' }}
         env:
           ARTIFACT_REFERENCE: ${{ steps.publication.outputs.reference }}
           ARTIFACT_TAG: ${{ steps.publication.outputs.tag }}
