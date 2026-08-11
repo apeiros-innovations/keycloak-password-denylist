@@ -73,7 +73,7 @@ jobs:
         run: chmod 0644 "${PASSWORD_FILE}"
 
       - name: Prepare publication
-        id: release
+        id: publication
         env:
           REPOSITORY: ${{ github.repository }}
         run: |
@@ -94,41 +94,40 @@ jobs:
           fi
 
           ARTIFACT_REPOSITORY="ghcr.io/${REPOSITORY,,}"
-          ARTIFACT="${ARTIFACT_REPOSITORY}:${SOURCE_REF}"
+          ARTIFACT_REFERENCE="${ARTIFACT_REPOSITORY}:${SOURCE_REF}"
+          ARTIFACT_EXISTS=false
 
-          if oras resolve "${ARTIFACT}" >/dev/null 2>&1; then
-            printf 'Refusing to overwrite existing artifact: %s\n' \
-              "${ARTIFACT}" >&2
-            exit 1
+          if oras resolve "${ARTIFACT_REFERENCE}" >/dev/null 2>&1; then
+            if [[ "${GITHUB_RUN_ATTEMPT}" == "1" ]]; then
+              printf 'Refusing to overwrite existing artifact: %s\n' \
+                "${ARTIFACT_REFERENCE}" >&2
+              exit 1
+            fi
+
+            printf 'Artifact already exists; resuming workflow attempt %s\n' \
+              "${GITHUB_RUN_ATTEMPT}"
+            ARTIFACT_EXISTS=true
           fi
 
-          STAGING_TAG="staging-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-
           {
+            printf 'exists=%s\n' "${ARTIFACT_EXISTS}"
+            printf 'reference=%s\n' "${ARTIFACT_REFERENCE}"
             printf 'repository=%s\n' "${ARTIFACT_REPOSITORY}"
             printf 'source-ref=%s\n' "${SOURCE_REF}"
-            printf 'staging-reference=%s:%s\n' \
-              "${ARTIFACT_REPOSITORY}" "${STAGING_TAG}"
             printf 'tag=%s\n' "${SOURCE_REF}"
           } >> "${GITHUB_OUTPUT}"
 
-      - name: Push staged OCI image
-        id: push
+      - name: Push OCI image
+        if: ${{ steps.publication.outputs.exists != 'true' }}
         env:
-          ARTIFACT_TAG: ${{ steps.release.outputs.tag }}
+          ARTIFACT_REFERENCE: ${{ steps.publication.outputs.reference }}
+          ARTIFACT_TAG: ${{ steps.publication.outputs.tag }}
           PACKAGE_REVISION: ${{ github.sha }}
           PACKAGE_SOURCE: https://github.com/${{ github.repository }}
-          SOURCE_REF: ${{ steps.release.outputs.source-ref }}
-          STAGING_REFERENCE: ${{ steps.release.outputs.staging-reference }}
         run: |
-          FILE_SHA256="$(
-            sha256sum "${PASSWORD_FILE}" |
-              awk '{print $1}'
-          )"
-
           imgpkg push \
             --yes \
-            --image "${STAGING_REFERENCE}" \
+            --image "${ARTIFACT_REFERENCE}" \
             --file "${ROOTFS_DIRECTORY}" \
             --preserve-permissions \
             --labels "org.opencontainers.image.title=keycloak-password-denylist" \
@@ -138,7 +137,13 @@ jobs:
             --labels "org.opencontainers.image.version=${ARTIFACT_TAG}" \
             --labels "org.opencontainers.image.licenses=MIT"
 
-          DIGEST="$(oras resolve "${STAGING_REFERENCE}")"
+      - name: Resolve OCI image
+        id: image
+        env:
+          ARTIFACT_REFERENCE: ${{ steps.publication.outputs.reference }}
+          ARTIFACT_REPOSITORY: ${{ steps.publication.outputs.repository }}
+        run: |
+          DIGEST="$(oras resolve "${ARTIFACT_REFERENCE}")"
 
           if [[ ! "${DIGEST}" =~ ^sha256:[a-f0-9]{64}$ ]]; then
             printf 'Registry returned an invalid digest: %s\n' \
@@ -146,30 +151,29 @@ jobs:
             exit 1
           fi
 
-          DIGEST_REFERENCE="${STAGING_REFERENCE%:*}@${DIGEST}"
-
           {
             printf 'digest=%s\n' "${DIGEST}"
-            printf 'reference=%s\n' "${DIGEST_REFERENCE}"
+            printf 'reference=%s@%s\n' \
+              "${ARTIFACT_REPOSITORY}" "${DIGEST}"
           } >> "${GITHUB_OUTPUT}"
 
       - name: Sign OCI image
         env:
-          DIGEST_REFERENCE: ${{ steps.push.outputs.reference }}
+          DIGEST_REFERENCE: ${{ steps.image.outputs.reference }}
         run: cosign sign --yes "${DIGEST_REFERENCE}"
 
       - name: Attest build provenance
         id: attest
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6  # v4.2.2
         with:
-          subject-name: ${{ steps.release.outputs.repository }}
-          subject-digest: ${{ steps.push.outputs.digest }}
+          subject-name: ${{ steps.publication.outputs.repository }}
+          subject-digest: ${{ steps.image.outputs.digest }}
           push-to-registry: true
 
       - name: Verify OCI signature
         env:
           CERTIFICATE_IDENTITY: https://github.com/${{ github.workflow_ref }}
-          DIGEST_REFERENCE: ${{ steps.push.outputs.reference }}
+          DIGEST_REFERENCE: ${{ steps.image.outputs.reference }}
         run: |
           cosign verify \
             --certificate-identity "${CERTIFICATE_IDENTITY}" \
@@ -177,52 +181,39 @@ jobs:
               https://token.actions.githubusercontent.com \
             "${DIGEST_REFERENCE}"
 
-      - name: Publish OCI tag without overwrite
+      - name: Verify published tag
         env:
-          ARTIFACT_REPOSITORY: ${{ steps.release.outputs.repository }}
-          ARTIFACT_TAG: ${{ steps.release.outputs.tag }}
-          DIGEST: ${{ steps.push.outputs.digest }}
+          ARTIFACT_REFERENCE: ${{ steps.publication.outputs.reference }}
+          EXPECTED_DIGEST: ${{ steps.image.outputs.digest }}
         run: |
-          ARTIFACT="${ARTIFACT_REPOSITORY}:${ARTIFACT_TAG}"
+          PUBLISHED_DIGEST="$(oras resolve "${ARTIFACT_REFERENCE}")"
 
-          if oras resolve "${ARTIFACT}" >/dev/null 2>&1; then
-            printf 'Refusing to overwrite existing artifact: %s\n' \
-              "${ARTIFACT}" >&2
-            exit 1
-          fi
-
-          oras tag \
-            "${ARTIFACT_REPOSITORY}@${DIGEST}" \
-            "${ARTIFACT_TAG}"
-
-          PUBLISHED_DIGEST="$(oras resolve "${ARTIFACT}")"
-
-          if [[ "${PUBLISHED_DIGEST}" != "${DIGEST}" ]]; then
+          if [[ "${PUBLISHED_DIGEST}" != "${EXPECTED_DIGEST}" ]]; then
             printf 'Published tag resolved to %s; expected %s\n' \
-              "${PUBLISHED_DIGEST}" "${DIGEST}" >&2
+              "${PUBLISHED_DIGEST}" "${EXPECTED_DIGEST}" >&2
             exit 1
           fi
 
       - name: Write publication summary
         if: ${{ always() }}
         env:
-          ARTIFACT_REPOSITORY: ${{ steps.release.outputs.repository }}
-          ARTIFACT_TAG: ${{ steps.release.outputs.tag }}
+          ARTIFACT_REFERENCE: ${{ steps.publication.outputs.reference }}
           ATTESTATION_URL: ${{ steps.attest.outputs.attestation-url }}
           CERTIFICATE_IDENTITY: https://github.com/${{ github.workflow_ref }}
-          DIGEST: ${{ steps.push.outputs.digest }}
-          SOURCE_REF: ${{ steps.release.outputs.source-ref }}
+          DIGEST: ${{ steps.image.outputs.digest }}
+          DIGEST_REFERENCE: ${{ steps.image.outputs.reference }}
+          SOURCE_REF: ${{ steps.publication.outputs.source-ref }}
         run: |
           {
             printf '## Keycloak password denylist\n\n'
             printf -- '- SecLists release: `%s`\n' \
               "${SOURCE_REF:-not-resolved}"
-            printf -- '- Artifact: `%s:%s`\n' \
-              "${ARTIFACT_REPOSITORY}" "${ARTIFACT_TAG}"
+            printf -- '- Artifact: `%s`\n' \
+              "${ARTIFACT_REFERENCE:-not-published}"
             printf -- '- Digest: `%s`\n' \
               "${DIGEST:-not-published}"
-            printf -- '- Digest-pinned reference: `%s@%s`\n' \
-              "${ARTIFACT_REPOSITORY}" "${DIGEST:-not-published}"
+            printf -- '- Digest-pinned reference: `%s`\n' \
+              "${DIGEST_REFERENCE:-not-published}"
             printf -- '- Signer: `%s`\n' \
               "${CERTIFICATE_IDENTITY}"
             printf -- '- Issuer: `%s`\n' \
