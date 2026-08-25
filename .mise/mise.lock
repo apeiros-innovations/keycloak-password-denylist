@@ -527,7 +527,7 @@ version = "21.2.2"
 backend = "npm:@commitlint/cli"
 
 [[tools."npm:cspell"]]
-version = "10.0.1"
+version = "10.1.0"
 backend = "npm:cspell"
 
 [[tools."npm:markdownlint-cli2"]]
