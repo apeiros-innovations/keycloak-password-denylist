@@ -537,7 +537,7 @@ version = "0.23.3"
 backend = "npm:markdownlint-cli2"
 
 [[tools."npm:oxfmt"]]
-version = "0.68.0"
+version = "0.69.0"
 backend = "npm:oxfmt"
 
 [[tools.vendir]]
