@@ -15,7 +15,7 @@ node = "26.10.0"
 "npm:cspell" = "10.3.3"
 "npm:@commitlint/cli" = "21.2.3"
 "npm:markdownlint-cli2" = "0.23.3"
-"npm:oxfmt" = "0.68.0"
+"npm:oxfmt" = "0.69.0"
 
 [hooks]
 postinstall = "lefthook install"
