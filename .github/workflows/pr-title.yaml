@@ -1,0 +1,27 @@
+---
+name: PR title
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+      - ready_for_review
+
+  merge_group:
+    types:
+      - checks_requested
+
+permissions:
+  pull-requests: read
+
+concurrency:
+  group: pr-title-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  title:
+    name: PR title
+    uses: apeiros-innovations/common/.github/workflows/pr-title-check.yaml@main  # zizmor: ignore[unpinned-uses] -- Follow reviewed organization workflow updates.
