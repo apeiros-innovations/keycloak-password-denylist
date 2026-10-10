@@ -31,7 +31,11 @@ jobs:
     name: Publish OCI artifact
     if: ${{ github.ref == 'refs/heads/main' }}
     environment: release
-    runs-on: ubuntu-latest
+    runs-on:
+      group: gha-shared
+      labels: gha-linux-k8s
+    container:
+      image: ghcr.io/home-operations/actions-runner:2.337.0@sha256:8b8e8326b5a08e658a0a41cfd2867afab69ca4194a152f986aa6fcd5430d09e7
     timeout-minutes: 20
 
     permissions:
@@ -48,9 +52,9 @@ jobs:
           persist-credentials: false
 
       - name: Install locked tools
-        uses: jdx/mise-action@94c60b39bc2d90ab2f9bab27f38d3cc4812c1834  # v5.1.0
+        uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca  # v5.1.1
         with:
-          version: 2026.10.2
+          version: 2026.10.7
           cache: false
           github_token: ${{ github.token }}
 
