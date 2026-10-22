@@ -17,6 +17,12 @@
       "commitMessageAction": "update",
       "commitMessageTopic": "SecLists to {{{newVersion}}}",
       "commitBody": "Release-As: {{{newVersion}}}.1"
+    },
+    {
+      "description": "Wait for published imgpkg binary releases instead of source-only tags",
+      "matchManagers": ["mise"],
+      "matchPackageNames": ["carvel-dev/imgpkg"],
+      "overrideDatasource": "github-releases"
     }
   ]
 }
