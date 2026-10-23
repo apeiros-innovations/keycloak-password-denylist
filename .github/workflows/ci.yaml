@@ -21,6 +21,9 @@ defaults:
   run:
     shell: bash
 
+env:
+  MISE_ENV: ci
+
 jobs:
   sync:
     name: Synchronize vendir content
@@ -38,10 +41,11 @@ jobs:
       - name: Install Vendir
         uses: jdx/mise-action@8418fedb1110381a0d3ba51a7a415d7c1b884550  # v5.2.2
         with:
-          version: 2026.10.17
-          cache: true
+          cache: false
           github_token: ${{ github.token }}
 
+          add_shims_to_path: false
+          install_args: --locked aqua:carvel-dev/vendir
       - name: Synchronize vendir content
         env:
           VENDIR_GITHUB_API_TOKEN: ${{ github.token }}

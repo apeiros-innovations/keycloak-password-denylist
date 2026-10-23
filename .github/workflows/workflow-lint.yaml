@@ -1,0 +1,101 @@
+name: Workflow quality
+on:
+  pull_request:
+    paths:
+      - .github/**
+      - .mise/**
+      - .miserc.toml
+      - package.json
+      - '**/*.sh'
+      - '**/*.bash'
+      - '**/*.bats'
+      - .lefthook/**
+  push:
+    branches:
+      - main
+    paths:
+      - .github/**
+      - .mise/**
+      - .miserc.toml
+      - package.json
+      - '**/*.sh'
+      - '**/*.bash'
+      - '**/*.bats'
+      - .lefthook/**
+  workflow_dispatch: {}
+permissions: {}
+env:
+  MISE_ENV: ci
+concurrency:
+  group: workflow-quality-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  workflows:
+    runs-on:
+      group: gha-shared
+      labels: gha-linux-k8s
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install ShellCheck archive support
+        shell: bash
+        run: |
+          if ! command -v xz >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install --yes --no-install-recommends xz-utils
+          fi
+      - uses: jdx/mise-action@8418fedb1110381a0d3ba51a7a415d7c1b884550  # v5.2.2
+        with:
+          install: false
+          cache: false
+          add_shims_to_path: false
+          env: false
+          export_path: false
+      - name: Read tool versions from mise
+        id: tool-versions
+        shell: bash
+        run: |
+          versions=$(env -u MISE_ENABLE_TOOLS mise ls --current --json | jq -c 'map_values(.[0].version)')
+          echo "versions=$versions" >> "$GITHUB_OUTPUT"
+      - name: Set up Python for workflow checks
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
+        with:
+          python-version: ${{ fromJSON(steps.tool-versions.outputs.versions)['python'] }}
+      - name: Lint workflows with reviewdog
+        uses: reviewdog/action-actionlint/dockerless@48e36f54d8da326b83ab061aee2cc5e01b5ca46f  # v1.80.6
+        with:
+          reporter: github-check
+          filter_mode: nofilter
+          fail_level: any
+      - name: Check shell scripts with reviewdog
+        uses: reviewdog/action-shellcheck@d0b8d5fd7fad6afdb6e1b6ce1778892be4d1f427  # v1.34.1
+        with:
+          reporter: github-check
+          filter_mode: nofilter
+          fail_level: any
+          check_all_files_with_shebangs: true
+          pattern: |
+            *.sh
+            *.bash
+            *.bats
+          exclude: |
+            */.git/*
+            */node_modules/*
+            */vendor/*
+            */.venv/*
+            */.mise/locks/*
+            */_output/*
+            */dist/*
+      - name: Audit workflow security
+        uses: zizmorcore/zizmor-action@85b2b9fb8e3325e7a23d7d0a9d7ba5ae0f999e3e  # v0.7.1
+        with:
+          version: ${{ fromJSON(steps.tool-versions.outputs.versions)['aqua:zizmorcore/zizmor'] }}
+          inputs: .github
+          advanced-security: false
+          annotations: true
