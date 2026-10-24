@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "semanticCommits": "enabled",
-  "extends": ["config:best-practices", "group:allNonMajor"],
+  "extends": ["config:best-practices", "group:allNonMajor", "github>apeiros-innovations/renovate-config//mise.json5#main"],
   "lockFileMaintenance": {
     "enabled": true
   },
