@@ -50,7 +50,7 @@ jobs:
             sudo apt-get update
             sudo apt-get install --yes --no-install-recommends xz-utils
           fi
-      - uses: jdx/mise-action@8418fedb1110381a0d3ba51a7a415d7c1b884550  # v5.2.2
+      - uses: jdx/mise-action@6be3c7ed4c21d4f76b208d351d95aac273ebb76d  # v5.2.4
         with:
           install: false
           cache: false
@@ -68,7 +68,7 @@ jobs:
         with:
           python-version: ${{ fromJSON(steps.tool-versions.outputs.versions)['python'] }}
       - name: Lint workflows with reviewdog
-        uses: reviewdog/action-actionlint/dockerless@48e36f54d8da326b83ab061aee2cc5e01b5ca46f  # v1.80.6
+        uses: reviewdog/action-actionlint/dockerless@cfa6a621f27735ccc88d35af9d0608692fd9b9f7  # v1.80.8
         with:
           reporter: github-check
           filter_mode: nofilter
@@ -93,7 +93,7 @@ jobs:
             */_output/*
             */dist/*
       - name: Audit workflow security
-        uses: zizmorcore/zizmor-action@85b2b9fb8e3325e7a23d7d0a9d7ba5ae0f999e3e  # v0.7.1
+        uses: zizmorcore/zizmor-action@53290badfa369cb0bf7ad16342cb62c2fa47ac7b  # v0.8.0
         with:
           version: ${{ fromJSON(steps.tool-versions.outputs.versions)['aqua:zizmorcore/zizmor'] }}
           inputs: .github

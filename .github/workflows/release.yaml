@@ -35,7 +35,7 @@ jobs:
       group: gha-shared
       labels: gha-linux-k8s
     container:
-      image: ghcr.io/home-operations/actions-runner:2.338.0@sha256:7ece17219b5ce764fff8bd2206bf66a612580fdc82d84b0097fbe6f4e8729801
+      image: ghcr.io/home-operations/actions-runner:2.338.2@sha256:2dd7caa094a425c041539447cb0e6ae63cda10b5242773764683b695b8fa5613
     timeout-minutes: 20
 
     permissions:
@@ -52,7 +52,7 @@ jobs:
           persist-credentials: false
 
       - name: Install locked tools
-        uses: jdx/mise-action@8418fedb1110381a0d3ba51a7a415d7c1b884550  # v5.2.2
+        uses: jdx/mise-action@6be3c7ed4c21d4f76b208d351d95aac273ebb76d  # v5.2.4
         with:
           cache: false
           github_token: ${{ github.token }}
@@ -71,7 +71,7 @@ jobs:
         with:
           cosign-release: v${{ fromJSON(steps.tool-versions.outputs.versions)['aqua:sigstore/cosign'] }}
       - name: Authenticate to GHCR
-        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f  # v4.6.0
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6  # v4.7.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
