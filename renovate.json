@@ -1,7 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "semanticCommits": "enabled",
-  "extends": ["config:best-practices", "group:allNonMajor", "github>apeiros-innovations/renovate-config//mise.json5#main"],
+  "extends": [
+    "config:best-practices",
+    "group:allNonMajor",
+    "github>apeiros-innovations/renovate-config//tooling.json5#main"
+  ],
   "lockFileMaintenance": {
     "enabled": true
   },
@@ -17,6 +21,12 @@
       "commitMessageAction": "update",
       "commitMessageTopic": "SecLists to {{{newVersion}}}",
       "commitBody": "Release-As: {{{newVersion}}}.1"
+    },
+    {
+      "description": "Wait for published imgpkg binary releases instead of source-only tags",
+      "matchManagers": ["mise"],
+      "matchPackageNames": ["carvel-dev/imgpkg"],
+      "overrideDatasource": "github-releases"
     }
   ]
 }
