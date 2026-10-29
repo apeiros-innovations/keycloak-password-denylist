@@ -31,9 +31,7 @@ jobs:
     name: Publish OCI artifact
     if: ${{ github.ref == 'refs/heads/main' }}
     environment: release
-    runs-on:
-      group: gha-shared
-      labels: gha-linux-k8s
+    runs-on: ubuntu-latest
     container:
       image: ghcr.io/home-operations/actions-runner:2.338.0@sha256:7ece17219b5ce764fff8bd2206bf66a612580fdc82d84b0097fbe6f4e8729801
     timeout-minutes: 20
