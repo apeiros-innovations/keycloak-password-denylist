@@ -1,15 +1,6 @@
+---
 name: Workflow quality
 on:
-  pull_request:
-    paths:
-      - .github/**
-      - .mise/**
-      - .miserc.toml
-      - package.json
-      - '**/*.sh'
-      - '**/*.bash'
-      - '**/*.bats'
-      - .lefthook/**
   push:
     branches:
       - main
@@ -23,6 +14,8 @@ on:
       - '**/*.bats'
       - .lefthook/**
   workflow_dispatch: {}
+  workflow_call: null
+
 permissions: {}
 env:
   MISE_ENV: ci

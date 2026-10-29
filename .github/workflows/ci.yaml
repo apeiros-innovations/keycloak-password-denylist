@@ -4,12 +4,11 @@
 name: CI
 
 on:
-  pull_request:
-    branches:
-      - main
+  pull_request: null
   push:
     branches:
       - main
+  merge_group: null
 
 permissions: {}
 
@@ -50,3 +49,27 @@ jobs:
         env:
           VENDIR_GITHUB_API_TOKEN: ${{ github.token }}
         run: vendir sync
+
+  workflow-lint:
+    uses: $/.github/workflows/workflow-lint.yaml
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+
+  status:
+    name: Build Success
+    if: ${{ always() }}
+    needs: ["sync", "workflow-lint"]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      statuses: read
+    steps:
+      - name: Require every selected check
+        uses: apeiros-innovations/common/.github/actions/ci-gate@cb121e644708aa003e4411492ed6ff33dbbbb68d  # main
+        with:
+          needs: ${{ toJSON(needs) }}
+          expected: >-
+            {"sync": true, "workflow-lint": true}
