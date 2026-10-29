@@ -415,7 +415,7 @@ version = "0.24.0"
 backend = "npm:markdownlint-cli2"
 
 [[tools."npm:oxfmt"]]
-version = "0.73.0"
+version = "0.74.0"
 backend = "npm:oxfmt"
 
 [[tools."pipx:yamllint"]]
