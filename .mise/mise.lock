@@ -100,49 +100,19 @@ url = "https://github.com/casey/just/releases/download/1.59.0/just-1.59.0-aarch6
 url_api = "https://api.github.com/repos/casey/just/releases/assets/643129724"
 
 [[tools."aqua:cli/cli"]]
-version = "2.103.0"
+version = "2.103.2"
 backend = "aqua:cli/cli"
 
-[tools."aqua:cli/cli"."platforms.linux-arm64"]
-checksum = "sha256:7f322df34e624d14f5ec0c4acb121fd6dfa14392fdbbd1066aa8e0a05ac3721e"
-url = "https://github.com/cli/cli/releases/download/v2.103.0/gh_2.103.0_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/cli/cli/releases/assets/662956401"
-provenance = "github-attestations"
-
-[tools."aqua:cli/cli"."platforms.linux-arm64-musl"]
-checksum = "sha256:7f322df34e624d14f5ec0c4acb121fd6dfa14392fdbbd1066aa8e0a05ac3721e"
-url = "https://github.com/cli/cli/releases/download/v2.103.0/gh_2.103.0_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/cli/cli/releases/assets/662956401"
-provenance = "github-attestations"
-
 [tools."aqua:cli/cli"."platforms.linux-x64"]
-checksum = "sha256:fdd768eb70f6409f80fcfa9f3a1c0adf0fc98d827ab3ce0bed2ac22762c5d786"
-url = "https://github.com/cli/cli/releases/download/v2.103.0/gh_2.103.0_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/cli/cli/releases/assets/662956379"
-provenance = "github-attestations"
-
-[tools."aqua:cli/cli"."platforms.linux-x64-musl"]
-checksum = "sha256:fdd768eb70f6409f80fcfa9f3a1c0adf0fc98d827ab3ce0bed2ac22762c5d786"
-url = "https://github.com/cli/cli/releases/download/v2.103.0/gh_2.103.0_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/cli/cli/releases/assets/662956379"
+checksum = "sha256:62ccf747115ddc61237efffdde66a3c8f70ba249433dc64f70801089b59c59c8"
+url = "https://github.com/cli/cli/releases/download/v2.103.2/gh_2.103.2_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/cli/cli/releases/assets/670305062"
 provenance = "github-attestations"
 
 [tools."aqua:cli/cli"."platforms.macos-arm64"]
-checksum = "sha256:54be566e9f614bea5de8021e95b9ad33dfee3b9d2ea120c9c294c00defaa5014"
-url = "https://github.com/cli/cli/releases/download/v2.103.0/gh_2.103.0_macOS_arm64.zip"
-url_api = "https://api.github.com/repos/cli/cli/releases/assets/662956481"
-provenance = "github-attestations"
-
-[tools."aqua:cli/cli"."platforms.macos-x64"]
-checksum = "sha256:64d1734941f104f996271c820daa50e96902c2618f9b4c1e63c41519517a9c6b"
-url = "https://github.com/cli/cli/releases/download/v2.103.0/gh_2.103.0_macOS_amd64.zip"
-url_api = "https://api.github.com/repos/cli/cli/releases/assets/662956458"
-provenance = "github-attestations"
-
-[tools."aqua:cli/cli"."platforms.windows-x64"]
-checksum = "sha256:80c846a5b8432672ca6373b34ce9de998c9686aaa1885c845f2e1ee81f713726"
-url = "https://github.com/cli/cli/releases/download/v2.103.0/gh_2.103.0_windows_amd64.zip"
-url_api = "https://api.github.com/repos/cli/cli/releases/assets/662956535"
+checksum = "sha256:5416000f5d17580a187339e0c4068a01ca5c87f7d4fe6ca64933696f967bc418"
+url = "https://github.com/cli/cli/releases/download/v2.103.2/gh_2.103.2_macOS_arm64.zip"
+url_api = "https://api.github.com/repos/cli/cli/releases/assets/670305145"
 provenance = "github-attestations"
 
 [[tools."aqua:dotenv-linter/dotenv-linter"]]
@@ -369,58 +339,35 @@ url = "https://github.com/mvdan/sh/releases/download/v3.14.1/shfmt_v3.14.1_darwi
 url_api = "https://api.github.com/repos/mvdan/sh/releases/assets/547320930"
 
 [[tools."aqua:oras-project/oras"]]
-version = "1.3.5"
+version = "1.3.6"
 backend = "aqua:oras-project/oras"
 
-[tools."aqua:oras-project/oras"."platforms.linux-arm64"]
-checksum = "sha256:d5d4e5afd5c0781c93eda5ea1976e654e1fdee202c1ddaeaf5f91a8c4fd67d46"
-url = "https://github.com/oras-project/oras/releases/download/v1.3.5/oras_1.3.5_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/oras-project/oras/releases/assets/654805930"
-
-[tools."aqua:oras-project/oras"."platforms.linux-arm64-musl"]
-checksum = "sha256:d5d4e5afd5c0781c93eda5ea1976e654e1fdee202c1ddaeaf5f91a8c4fd67d46"
-url = "https://github.com/oras-project/oras/releases/download/v1.3.5/oras_1.3.5_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/oras-project/oras/releases/assets/654805930"
-
 [tools."aqua:oras-project/oras"."platforms.linux-x64"]
-checksum = "sha256:f48a73ea6d026a862c3919fc773da9a8c86fc259c2c737d5baed3b8b9614ad22"
-url = "https://github.com/oras-project/oras/releases/download/v1.3.5/oras_1.3.5_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/oras-project/oras/releases/assets/654805933"
-
-[tools."aqua:oras-project/oras"."platforms.linux-x64-musl"]
-checksum = "sha256:f48a73ea6d026a862c3919fc773da9a8c86fc259c2c737d5baed3b8b9614ad22"
-url = "https://github.com/oras-project/oras/releases/download/v1.3.5/oras_1.3.5_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/oras-project/oras/releases/assets/654805933"
+checksum = "sha256:66fb0ad7206f3f6fa77ed5b552049d364ccf4b50b1684554f731f76302b52ca0"
+checksum_source = "mise-versions"
+url = "https://github.com/oras-project/oras/releases/download/v1.3.6/oras_1.3.6_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/oras-project/oras/releases/assets/673056256"
 
 [tools."aqua:oras-project/oras"."platforms.macos-arm64"]
-checksum = "sha256:bd164bc9d08e9c5edb918f76e0cf92ecc61f6a50a4a6709b1cb06cf6721b4610"
-url = "https://github.com/oras-project/oras/releases/download/v1.3.5/oras_1.3.5_darwin_arm64.tar.gz"
-url_api = "https://api.github.com/repos/oras-project/oras/releases/assets/654805951"
-
-[tools."aqua:oras-project/oras"."platforms.macos-x64"]
-checksum = "sha256:0e8a0b4b0bb7179442097152f8b49d7cb22d15f023371a2d30b40914d9ba3ac3"
-url = "https://github.com/oras-project/oras/releases/download/v1.3.5/oras_1.3.5_darwin_amd64.tar.gz"
-url_api = "https://api.github.com/repos/oras-project/oras/releases/assets/654805955"
-
-[tools."aqua:oras-project/oras"."platforms.windows-x64"]
-checksum = "sha256:3e72bf9f4361625d68dc96a10f485c4bf9973f9f9b170652ab78220a0bc7092c"
-url = "https://github.com/oras-project/oras/releases/download/v1.3.5/oras_1.3.5_windows_amd64.zip"
-url_api = "https://api.github.com/repos/oras-project/oras/releases/assets/654805913"
+checksum = "sha256:e2b25a53234e2471c5fc81936f957fa612065ab559c21834c02d8bfbc2f62b30"
+checksum_source = "mise-versions"
+url = "https://github.com/oras-project/oras/releases/download/v1.3.6/oras_1.3.6_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/oras-project/oras/releases/assets/673056179"
 
 [[tools."aqua:sigstore/cosign"]]
-version = "3.1.3"
+version = "3.1.4"
 backend = "aqua:sigstore/cosign"
 
 [tools."aqua:sigstore/cosign"."platforms.linux-x64"]
-checksum = "sha256:4629c757b7618056f8ddd7e2625ae9fdd94c0372a65049520bc7d9df9efc7f71"
-url = "https://github.com/sigstore/cosign/releases/download/v3.1.3/cosign-linux-amd64"
-url_api = "https://api.github.com/repos/sigstore/cosign/releases/assets/503286005"
+checksum = "sha256:424e2c97d0b45fd7a6b608a87f090f35633f4c23ece5f092d48bba11aaf4bbfa"
+url = "https://github.com/sigstore/cosign/releases/download/v3.1.4/cosign-linux-amd64"
+url_api = "https://api.github.com/repos/sigstore/cosign/releases/assets/660069428"
 provenance = "cosign"
 
 [tools."aqua:sigstore/cosign"."platforms.macos-arm64"]
-checksum = "sha256:5cf948c2f4dfe59687bdd0b8523709067383e03982cc543475c8a7dc70e92a76"
-url = "https://github.com/sigstore/cosign/releases/download/v3.1.3/cosign-darwin-arm64"
-url_api = "https://api.github.com/repos/sigstore/cosign/releases/assets/503286205"
+checksum = "sha256:9f9b8cd557cf2e5b3df3373a00baa005a86b02391e3e06dd0ce37b3a1533d3a4"
+url = "https://github.com/sigstore/cosign/releases/download/v3.1.4/cosign-darwin-arm64"
+url_api = "https://api.github.com/repos/sigstore/cosign/releases/assets/660069257"
 provenance = "cosign"
 
 [[tools."aqua:zizmorcore/zizmor"]]
