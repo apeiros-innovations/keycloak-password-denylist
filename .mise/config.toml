@@ -1,5 +1,5 @@
 [tools]
-node = "26.12.1"
+node = "26.13.0"
 "aqua:cli/cli" = "2.103.3"
 "aqua:casey/just" = "1.59.0"
 "aqua:google/yamlfmt" = "0.21.0"
