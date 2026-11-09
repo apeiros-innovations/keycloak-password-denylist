@@ -24,4 +24,4 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Retry the required CI check
-        uses: apeiros-innovations/common/.github/actions/retry-renovate-check@590588b1f1b4304c1908264948fae50e46e78f89  # v1.0.1
+        uses: apeiros-innovations/common/.github/actions/retry-renovate-check@b384ef8b9d8d9d967b0f68cd5b52e66295d415f4 # v1.1.0

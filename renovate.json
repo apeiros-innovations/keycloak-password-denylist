@@ -4,7 +4,8 @@
   "extends": [
     "config:best-practices",
     "group:allNonMajor",
-    "github>apeiros-innovations/renovate-config//tooling.json5#main"
+    "github>apeiros-innovations/renovate-config//tooling.json5#main",
+    "github>apeiros-innovations/renovate-config//common.json5#main"
   ],
   "lockFileMaintenance": {
     "enabled": true
