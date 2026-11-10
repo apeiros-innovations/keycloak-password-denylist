@@ -68,7 +68,7 @@ jobs:
       statuses: read
     steps:
       - name: Require every selected check
-        uses: apeiros-innovations/common/.github/actions/ci-gate@b384ef8b9d8d9d967b0f68cd5b52e66295d415f4 # v1.1.0
+        uses: apeiros-innovations/common/.github/actions/ci-gate@4be80ca4e32b1478bca8780b479c14bdfca68400 # v1.1.1
         with:
           needs: ${{ toJSON(needs) }}
           expected: >-
