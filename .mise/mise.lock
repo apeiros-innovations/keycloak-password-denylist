@@ -149,19 +149,19 @@ url = "https://github.com/google/yamlfmt/releases/download/v0.21.0/yamlfmt_0.21.
 url_api = "https://api.github.com/repos/google/yamlfmt/releases/assets/336650209"
 
 [[tools."aqua:kjanat/actionlint"]]
-version = "1.17.0"
+version = "1.17.1"
 backend = "aqua:kjanat/actionlint"
 
 [tools."aqua:kjanat/actionlint"."platforms.linux-x64"]
-checksum = "sha256:620abd485a12b6ab1125b844a876414e1d5bd2af8a3125b27f82b01d0d9d6e5a"
-url = "https://github.com/kjanat/actionlint/releases/download/v1.17.0/actionlint_1.17.0_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/kjanat/actionlint/releases/assets/561506357"
+checksum = "sha256:6bfe0f49f0e108b9b23732baf7de63bfa4d89174fa40f9cb98feb9676df3318f"
+url = "https://github.com/kjanat/actionlint/releases/download/v1.17.1/actionlint_1.17.1_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/kjanat/actionlint/releases/assets/727138046"
 provenance = "github-attestations"
 
 [tools."aqua:kjanat/actionlint"."platforms.macos-arm64"]
-checksum = "sha256:f123b7ad57a0fe376dcc85e81b7e04e85eb39219184803fc25f989b255f569b4"
-url = "https://github.com/kjanat/actionlint/releases/download/v1.17.0/actionlint_1.17.0_darwin_arm64.tar.gz"
-url_api = "https://api.github.com/repos/kjanat/actionlint/releases/assets/561506341"
+checksum = "sha256:c19eed4942963cf37dd058dd5ad3871ad2c655062234de539cabc8405ad27342"
+url = "https://github.com/kjanat/actionlint/releases/download/v1.17.1/actionlint_1.17.1_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/kjanat/actionlint/releases/assets/727137994"
 provenance = "github-attestations"
 
 [[tools."aqua:koalaman/shellcheck"]]
