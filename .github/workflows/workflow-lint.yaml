@@ -11,7 +11,28 @@ concurrency:
   group: workflow-quality-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  scope:
+    name: Select affected checks
+    runs-on: ubuntu-26.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      selected: ${{ steps.select.outputs.selected }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: select
+        # Review pin; replace with the published Common release before merging.
+        uses: apeiros-innovations/common/.github/actions/select-checks@d54f74ffaeb28f261c5d277c0af053453c225ef3
+        with:
+          policy: .github/ci-impact/workflow-lint.json
+
   workflows:
+    if: ${{ needs.scope.result == 'success' && fromJSON(needs.scope.outputs.selected || '{}')['workflows'] }}
+    needs: ["scope"]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
