@@ -31,20 +31,48 @@ jobs:
     permissions:
       contents: read
     outputs:
-      selected: ${{ steps.select.outputs.selected }}
+      sync: ${{ steps.baseline.outputs.full == 'true' || steps.filter.outputs.unclassified == 'true' || steps.filter.outputs['sync'] == 'true' }}
+      workflow-lint: ${{ steps.baseline.outputs.full == 'true' || steps.filter.outputs.unclassified == 'true' || steps.filter.outputs['workflow-lint'] == 'true' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
-      - id: select
-        # Review pin; replace with the published Common release before merging.
-        uses: apeiros-innovations/common/.github/actions/select-checks@d54f74ffaeb28f261c5d277c0af053453c225ef3
+      - name: Check comparison history
+        id: baseline
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
+          NEW_BRANCH: ${{ github.event.created || false }}
+          REF: ${{ github.ref }}
+        shell: bash
+        run: |
+          full=true
+          if [[ "$EVENT" == pull_request || "$EVENT" == push || "$EVENT" == merge_group ]] &&
+             [[ "$NEW_BRANCH" != true && "$REF" != refs/tags/* ]] &&
+             [[ "$BASE" =~ ^[[:xdigit:]]{40}$ && "$HEAD_SHA" =~ ^[[:xdigit:]]{40}$ ]] &&
+             git cat-file -e "$BASE^{commit}" && git cat-file -e "$HEAD_SHA^{commit}"; then
+            if [[ "$EVENT" == pull_request ]]; then
+              if git merge-base "$BASE" "$HEAD_SHA" >/dev/null; then full=false; fi
+            elif git merge-base --is-ancestor "$BASE" "$HEAD_SHA"; then
+              full=false
+            fi
+          fi
+          echo "full=$full" >> "$GITHUB_OUTPUT"
+      - name: Detect changed paths
+        id: filter
+        if: steps.baseline.outputs.full == 'false'
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         with:
-          policy: .github/ci-impact/ci.json
+          token: ""
+          base: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
+          ref: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
+          predicate-quantifier: some-with-excludes
+          filters: .github/paths/ci.yaml
 
   sync:
-    if: ${{ needs.scope.result == 'success' && fromJSON(needs.scope.outputs.selected || '{}')['sync'] }}
+    if: ${{ needs.scope.result == 'success' && (needs.scope.outputs['sync'] == 'true') }}
     needs: ["scope"]
     name: Synchronize vendir content
     runs-on: ubuntu-latest
@@ -72,7 +100,7 @@ jobs:
         run: vendir sync
 
   workflow-lint:
-    if: ${{ needs.scope.result == 'success' && fromJSON(needs.scope.outputs.selected || '{}')['workflow-lint'] }}
+    if: ${{ needs.scope.result == 'success' && (needs.scope.outputs['workflow-lint'] == 'true') }}
     needs: ["scope"]
     uses: $/.github/workflows/workflow-lint.yaml
     permissions:
@@ -95,4 +123,4 @@ jobs:
         with:
           needs: ${{ toJSON(needs) }}
           expected: >-
-            {"scope": true, "sync": "${{ fromJSON(needs.scope.outputs.selected || '{}')['sync'] }}", "workflow-lint": "${{ fromJSON(needs.scope.outputs.selected || '{}')['workflow-lint'] }}"}
+            {"scope": true, "sync": "${{ (needs.scope.outputs['sync'] == 'true') }}", "workflow-lint": "${{ (needs.scope.outputs['workflow-lint'] == 'true') }}"}
