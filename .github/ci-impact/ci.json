@@ -41,14 +41,22 @@
     },
     "workflow-lint": {
       "paths": [
-        ".github/workflows/**",
-        ".github/actions/**",
-        ".github/actionlint.yaml",
-        ".github/actionlint.yml",
-        ".github/zizmor.yaml",
-        ".shellcheckrc",
-        ".github/workflows/ci.yaml",
-        ".github/workflows/tools.yaml"
+        ":(top,glob)**",
+        ":(exclude)README.md",
+        ":(exclude)CHANGELOG.md",
+        ":(exclude)CONTRIBUTING.md",
+        ":(exclude)AGENTS.md",
+        ":(exclude)LICENSE",
+        ":(exclude)LICENSES/**",
+        ":(exclude)THIRD_PARTY_NOTICES.md",
+        ":(exclude).vscode/**",
+        ":(exclude).editorconfig",
+        ":(exclude).commitlintrc.yaml",
+        ":(exclude).betterleaks.toml",
+        ":(exclude).betterleaksignore",
+        ":(exclude).renovaterc.json5",
+        ":(exclude)renovate.json",
+        ":(exclude).github/renovate.json"
       ],
       "tools": [
         "python",
