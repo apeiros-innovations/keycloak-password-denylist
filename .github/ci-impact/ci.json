@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "ignore_paths": [
+    "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "AGENTS.md",
+    "LICENSE",
+    "LICENSES/**",
+    "THIRD_PARTY_NOTICES.md",
+    ".vscode/**",
+    ".editorconfig",
+    ".lefthook.yaml",
+    ".lefthook/**",
+    ".commitlintrc.yaml",
+    ".betterleaks.toml",
+    ".betterleaksignore",
+    ".renovaterc.json5",
+    "renovate.json",
+    ".github/renovate.json"
+  ],
+  "ignore_tools": [
+    "aqua:betterleaks/betterleaks",
+    "aqua:evilmartians/lefthook",
+    "npm:@commitlint/cli",
+    "npm:@commitlint/config-conventional"
+  ],
+  "jobs": {
+    "sync": {
+      "paths": [
+        "vendir.yml",
+        "vendir.lock.yml",
+        ".github/workflows/ci.yaml",
+        ".github/workflows/tools.yaml",
+        ".github/actions/**"
+      ],
+      "tools": [
+        "aqua:carvel-dev/vendir"
+      ],
+      "needs": []
+    },
+    "workflow-lint": {
+      "paths": [
+        ".github/workflows/**",
+        ".github/actions/**",
+        ".github/actionlint.yaml",
+        ".github/actionlint.yml",
+        ".github/zizmor.yaml",
+        ".shellcheckrc",
+        ".github/workflows/ci.yaml",
+        ".github/workflows/tools.yaml"
+      ],
+      "tools": [
+        "python",
+        "aqua:kjanat/actionlint",
+        "aqua:rhysd/actionlint",
+        "aqua:zizmorcore/zizmor",
+        "aqua:koalaman/shellcheck"
+      ],
+      "needs": []
+    }
+  }
+}

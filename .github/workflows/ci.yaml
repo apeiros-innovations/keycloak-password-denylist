@@ -24,7 +24,28 @@ env:
   MISE_ENV: ci
 
 jobs:
+  scope:
+    name: Select affected checks
+    runs-on: ubuntu-26.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      selected: ${{ steps.select.outputs.selected }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: select
+        # Review pin; replace with the published Common release before merging.
+        uses: apeiros-innovations/common/.github/actions/select-checks@8ec97ac7c6336952d951a95a49771aec551a8291
+        with:
+          policy: .github/ci-impact/ci.json
+
   sync:
+    if: ${{ needs.scope.result == 'success' && fromJSON(needs.scope.outputs.selected || '{}')['sync'] }}
+    needs: ["scope"]
     name: Synchronize vendir content
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -51,6 +72,8 @@ jobs:
         run: vendir sync
 
   workflow-lint:
+    if: ${{ needs.scope.result == 'success' && fromJSON(needs.scope.outputs.selected || '{}')['workflow-lint'] }}
+    needs: ["scope"]
     uses: $/.github/workflows/workflow-lint.yaml
     permissions:
       contents: read
@@ -60,7 +83,7 @@ jobs:
   status:
     name: Build Success
     if: ${{ always() }}
-    needs: ["sync", "workflow-lint"]
+    needs: ["scope", "sync", "workflow-lint"]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -72,4 +95,4 @@ jobs:
         with:
           needs: ${{ toJSON(needs) }}
           expected: >-
-            {"sync": true, "workflow-lint": true}
+            {"scope": true, "sync": "${{ fromJSON(needs.scope.outputs.selected || '{}')['sync'] }}", "workflow-lint": "${{ fromJSON(needs.scope.outputs.selected || '{}')['workflow-lint'] }}"}
