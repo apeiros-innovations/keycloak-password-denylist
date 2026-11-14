@@ -2,7 +2,7 @@
 remotes:
   - git_url: https://github.com/apeiros-innovations/common.git
     # renovate: datasource=github-tags depName=apeiros-innovations/common
-    ref: v1.1.1
+    ref: v2.0.0
     refetch_frequency: 24h
     configs:
       - lefthook.common.yaml
