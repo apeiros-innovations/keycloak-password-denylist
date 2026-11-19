@@ -17,18 +17,20 @@ url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/740313603"
 provenance = "github-attestations"
 
 [[tools."aqua:carvel-dev/imgpkg"]]
-version = "0.49.0"
+version = "0.49.2"
 backend = "aqua:carvel-dev/imgpkg"
 
 [tools."aqua:carvel-dev/imgpkg"."platforms.linux-x64"]
-checksum = "sha256:ea4d83bc88d5c9c6deda3951a80f621ea16769b94d4815edb1078399fdd9a5c3"
-url = "https://github.com/carvel-dev/imgpkg/releases/download/v0.49.0/imgpkg-linux-amd64"
-url_api = "https://api.github.com/repos/carvel-dev/imgpkg/releases/assets/636773736"
+checksum = "sha256:1fbc3429cffadd8f8ee0fda85434890778100f69544cfa40152ccde35ed16a0e"
+checksum_source = "mise-versions"
+url = "https://github.com/carvel-dev/imgpkg/releases/download/v0.49.2/imgpkg-linux-amd64"
+url_api = "https://api.github.com/repos/carvel-dev/imgpkg/releases/assets/753798811"
 
 [tools."aqua:carvel-dev/imgpkg"."platforms.macos-arm64"]
-checksum = "sha256:83add15b35fd1e1d032a9ad988225725c9a3ef30160363b9085f172863787df6"
-url = "https://github.com/carvel-dev/imgpkg/releases/download/v0.49.0/imgpkg-darwin-arm64"
-url_api = "https://api.github.com/repos/carvel-dev/imgpkg/releases/assets/636773655"
+checksum = "sha256:07aec2fea58ba31c16986305e8279ba71a73958e25a14dbacb595985bdcb30d0"
+checksum_source = "mise-versions"
+url = "https://github.com/carvel-dev/imgpkg/releases/download/v0.49.2/imgpkg-darwin-arm64"
+url_api = "https://api.github.com/repos/carvel-dev/imgpkg/releases/assets/753798710"
 
 [[tools."aqua:carvel-dev/vendir"]]
 version = "0.46.3"
