@@ -245,7 +245,7 @@ version = "10.5.2"
 backend = "npm:cspell"
 
 [[tools."npm:markdownlint-cli2"]]
-version = "0.24.1"
+version = "0.24.2"
 backend = "npm:markdownlint-cli2"
 
 [[tools."npm:oxfmt"]]
