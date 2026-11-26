@@ -100,8 +100,10 @@ jobs:
             sudo apt-get install --yes --no-install-recommends xz-utils
           fi
       - uses: jdx/mise-action@924e7c586e33d7d4bae9c14e26c5d22e2beb6e78  # v5.3.0
+        env:
+          MISE_ENABLE_TOOLS: aqua:zizmorcore/zizmor
         with:
-          install: false
+          install_args: --locked aqua:zizmorcore/zizmor
           cache: false
           add_shims_to_path: false
           env: false
@@ -144,9 +146,7 @@ jobs:
             */_output/*
             */dist/*
       - name: Audit workflow security
-        uses: zizmorcore/zizmor-action@a818f16177a5395fc11d3c73577caabaa7119391  # v0.9.1
-        with:
-          version: ${{ fromJSON(steps.tool-versions.outputs.versions)['aqua:zizmorcore/zizmor'] }}
-          inputs: .github
-          advanced-security: false
-          annotations: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MISE_ENABLE_TOOLS: aqua:zizmorcore/zizmor
+        run: mise exec --locked aqua:zizmorcore/zizmor -- zizmor --format=github .github
